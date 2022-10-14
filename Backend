@@ -1,3 +1,221 @@
-import Flask
-import sql
+#sql and creds files receive credit from class lecture
+
+import hashlib
+from tkinter import N
+from turtle import update
+import mysql.connector
+import creds
+from flask import Flask
+from mysql.connector import Error
+from flask import jsonify
+from flask import request, make_response
+from sql import create_connection
+from sql import execute_read_query
+from sql import execute_query
+
+app = Flask(__name__) # sets up the application
+app.config["DEBUG"] = True # allow to show errors in browser
+
+# connect to database
+myCreds =creds.Creds()
+conn = create_connection(myCreds.conString, myCreds.userName, myCreds.password, myCreds.dbName)
+sql = "SELECT * from planes"
+sql1 = "SELECT * from airports"
+sql2 = "SELECT * from flights"
+
+planes = execute_read_query(conn,sql)
+airports = execute_read_query(conn,sql1)
+flights = execute_read_query(conn,sql2)
+results =[]
+
+
+
+
+#                               ////  END POINT WITH GET METHOD   //////
+#end point to get all airports with GET method
+@app.route('/api/airports/all', methods=['GET'])
+def api_airports_all():
+    return jsonify(airports)
+
+#end point to get all planes with GET method
+@app.route('/api/planes/all', methods=['GET'])
+def api_planes_all():
+    return jsonify(planes)
+
+#end point to get all flights with GET method
+@app.route('/api/flights/all', methods=['GET'])
+def api_flights_all():
+    return jsonify(flights)
+
+
+
+
+#                           ////   END POINT WITH POST METHOD   /////
+
+# ADD PLANE WITH POST METHOD
+@app.route('/api/plane', methods=['POST'])
+#define function to execute
+def add_plane():
+    request_data = request.get_json()
+    new_id = request_data['id']
+    new_make = request_data['make']
+    new_model = request_data['model']
+    new_year = request_data['year']
+    new_capacity = request_data['capacity']    
+    
+    planes.append({'id': new_id, 
+                 'make': new_make,
+                 'model': new_model,
+                 'year': new_year,
+                 'capacity': new_capacity})   
+    return 'Add request successful.'
+
+
+
+
+# ADD AIRPORT WITH POST METHOD
+@app.route('/api/airport', methods=['POST'])
+#define function to execute
+def add_airport():
+    request_data = request.get_json()
+    new_id = request_data['id']
+    new_airport_code = request_data['airportcode']
+    new_airport_name = request_data['airportname']
+    new_country = request_data['country']
+        
+    
+    airports.append({'id': new_id, 
+                 'airportcode': new_airport_code,
+                 'airportname': new_airport_name,
+                 'country': new_country})
+    return 'Add request successful.'
+
+
+
+
+# ADD FLIGHT WITH POST METHOD
+@app.route('/api/flight', methods=['POST'])
+#define function to execute
+def add_flight():
+    request_data = request.get_json()
+    new_id = request_data['id']
+    new_plane_id = request_data['planeid']
+    new_airport_from_id = request_data['airportfromid']
+    new_airport_to_id = request_data['airporttoid']
+    new_date = request_data['date']    
+    
+    flights.append({'id': new_id, 
+                 'planeid': new_plane_id,
+                 'airportfromid': new_airport_from_id,
+                 'airporttoid': new_airport_to_id,
+                 'date': new_date})   
+    return 'Add request successful.'
+
+
+
+
+#                        /////    END POINT WITH PUT METHOD      /////
+
+# UPDATE PLANE WITH PUT METHOD
+@app.route('/api/plane/p', methods = ['PUT'])
+#define function to update plane
+def update_plane():
+    if 'id' in request.args:
+        id = int(request.args['id'])
+    else:
+        return 'ERROR: No ID provided!'
+    
+    request_data = request.get_json()
+    update_make = request_data['make']
+    update_model = request_data['model']
+    update_year = request_data['year']
+    update_capacity = request_data['capacity']
+    
+    for p in planes:
+        if p['id'] == id:
+            p.update({
+                            'make': update_make,
+                            'model':update_model,
+                            'year': update_year,
+                            'capacity': update_capacity})
+    return 'Update request succesfull!'
+
+
+
+
+# UPDATE AIRPORT WITH PUT METHOD
+@app.route('/api/airport/j', methods = ['PUT'])
+#define function to update gem
+def update_airport():
+    if 'id' in request.args:
+        id = int(request.args['id'])
+    else:
+        return 'ERROR: No ID provided!'
+    
+    request_data = request.get_json()
+    update_airport_code = request_data['airportcode']
+    update_airport_name = request_data['airportname']
+    update_country = request_data['country']
+    
+    for j in airports:
+        if j['id'] == id:
+            j.update({
+                            'airportcode': update_airport_code,
+                            'airportname':update_airport_name,
+                            'country': update_country})
+    return 'Update request succesfull!'
+
+
+
+
+#                           /////    END POINT WITH DELETE METHOD       ///////
+
+
+# DELETE PLANE RECORD WITH DELETE METHOD
+@app.route('/api/plane', methods=['DELETE'])
+#define function to delete plane record
+def delete_plane():
+    request_data = request.get_json()
+    id_to_delete = request_data['id']
+    for i in range(len(planes) - 1, -1, -1): #start, stop, step size
+        if planes[i]['id'] == id_to_delete:
+            del(planes[i])
+    return "Delete request successful."
+
+
+
+# DELETE AIRPORT RECORD
+@app.route('/api/airport', methods=['DELETE'])
+#define function to delete airport
+def delete_airport():
+    request_data = request.get_json()
+    id_to_delete = request_data['id']
+    for i in range(len(airports) - 1, -1, -1): #start, stop, step size
+        if airports[i]['id'] == id_to_delete:
+            del(airports[i])
+    return "Delete request successful."
+
+
+# DELETE FLIGHT RECORD
+@app.route('/api/flight', methods=['DELETE'])
+#define function to delete flight
+def delete_flight():
+    request_data = request.get_json()
+    id_to_delete = request_data['id']
+    for i in range(len(flights) - 1, -1, -1): #start, stop, step size
+        if flights[i]['id'] == id_to_delete:
+            del(flights[i])
+    return "Delete request successful."
+
+
+
+# CREATE SIMPLE LOG IN API
+@app.route('/user', methods = ['GET, POST'])
+def get_user():
+    username = request.form['lucy']
+    password = request.form['123456']
+    status = login(username, password)
+    return status
+
+app.run()
 
