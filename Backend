@@ -1,4 +1,7 @@
 #sql and creds files receive credit from class lecture
+#This backend project includes 3 files: main, sql and creds.
+
+
 
 import hashlib
 from tkinter import N
@@ -28,6 +31,17 @@ airports = execute_read_query(conn,sql1)
 flights = execute_read_query(conn,sql2)
 results =[]
 
+
+# CREATE SIMPLE LOG IN API
+@app.route('/login', methods = ['POST'])
+def user_login():
+    request_data = request.get_json()
+    user_name = request_data['username']
+    password = request_data['password']
+    if user_name == 'admin' and password == 'cis3368':
+        return 'Welcome to my flight database!'
+    else:
+        return 'Access denied!'
 
 
 
@@ -209,13 +223,6 @@ def delete_flight():
 
 
 
-# CREATE SIMPLE LOG IN API
-@app.route('/user', methods = ['GET, POST'])
-def get_user():
-    username = request.form['lucy']
-    password = request.form['123456']
-    status = login(username, password)
-    return status
 
 app.run()
 
