@@ -50,11 +50,44 @@ def user_login():
 @app.route('/api/airports/all', methods=['GET'])
 def api_airports_all():
     return jsonify(airports)
+    
+#endpoint to get a single airport information
+@app.route('/api/airport/a', methods=['GET']) 
+def api_airport_id():
+    if 'id' in request.args:
+        id = int(request.args['id'])
+    else:
+        return 'ERROR: No ID provided!'
+    results = [] #resulting gem to return
+    for a in airports:
+        if a['id'] == id:
+            results.append(a)
+    return jsonify(results)
+    
+    
+
 
 #end point to get all planes with GET method
 @app.route('/api/planes/all', methods=['GET'])
 def api_planes_all():
     return jsonify(planes)
+    
+#endpoint to get a single plan information
+@app.route('/api/planes/p', methods=['GET']) 
+def api_plane_id():
+    if 'id' in request.args:
+        id = int(request.args['id'])
+    else:
+        return 'ERROR: No ID provided!'
+    results = [] #resulting gem to return
+    for p in planes:
+        if p['id'] == id:
+            results.append(p)
+    return jsonify(results)
+    
+    
+    
+
 
 #end point to get all flights with GET method
 @app.route('/api/flights/all', methods=['GET'])
@@ -62,6 +95,20 @@ def api_flights_all():
     return jsonify(flights)
 
 
+#endpoint to get a single flight information
+@app.route('/api/flights/f', methods=['GET']) 
+def api_flight_id():
+    if 'id' in request.args:
+        id = int(request.args['id'])
+    else:
+        return 'ERROR: No ID provided!'
+    results = [] #resulting gem to return
+    for f in flights:
+        if f['id'] == id:
+            results.append(f)
+    return jsonify(results)
+    
+    
 
 
 #                           ////   END POINT WITH POST METHOD   /////
@@ -191,7 +238,7 @@ def update_airport():
 def delete_plane():
     request_data = request.get_json()
     id_to_delete = request_data['id']
-    for i in range(len(planes) - 1, -1, -1): #start, stop, step size
+    for i in range(len(planes) - 1, -1, -1): 
         if planes[i]['id'] == id_to_delete:
             del(planes[i])
     return "Delete request successful."
@@ -204,7 +251,7 @@ def delete_plane():
 def delete_airport():
     request_data = request.get_json()
     id_to_delete = request_data['id']
-    for i in range(len(airports) - 1, -1, -1): #start, stop, step size
+    for i in range(len(airports) - 1, -1, -1): 
         if airports[i]['id'] == id_to_delete:
             del(airports[i])
     return "Delete request successful."
@@ -216,7 +263,7 @@ def delete_airport():
 def delete_flight():
     request_data = request.get_json()
     id_to_delete = request_data['id']
-    for i in range(len(flights) - 1, -1, -1): #start, stop, step size
+    for i in range(len(flights) - 1, -1, -1): 
         if flights[i]['id'] == id_to_delete:
             del(flights[i])
     return "Delete request successful."
