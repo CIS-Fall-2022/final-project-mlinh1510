@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body class="container">
+
+    <header>
+        <%- include('../partials/header'); %>
+    </header>
+
+<main>
+    <h1> Airports </h1>
+    <div class="row">
+        <div class="col">
+            <div class="jumbotron">
+            <ul>
+                <% if (locals.airports) { %>
+                <% locals.airports.forEach(function(airport) { %>  
+            <li> 
+                <strong><%= airport.airportcode %></strong> 
+                <%= airport.airportname %>, <%= airport.country %>
+            </li>               
+                <% }); %>                      
+                <% } %> 
+            </ul>
+            </div>
+        </div>
+    </div>
+
+    <h2> Add an airport</h2>
+    <div class="row">
+        <div class="col mb-4">
+            <div class="jumbotron">
+                <form action ="/process_form_add_airport" class ="formClass" method ="post">
+                    <div class="form-outline mb-4">
+                        <lable>Airport Code</lable>
+                        <input type = "text" name ="airportcode" placeholder ="Airport Code eg.LAX" required>
+                    </div>
+               
+                    <div class="form-outline mb-4">
+                        <lable>Airport Name</lable> 
+                        <input type = "text" name ="airportname" placeholder ="Airport Name" required>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <lable>Country</lable>
+                        <input type = "text" name ="country" placeholder ="Country" required>
+                    </div>
+                    <div>
+                        <button type = "submit"> Submit </button>
+                    </div> 
+                </form>
+            </div>
+        </div>
+    </div>
+   
+
+
+
+    <h2> Update an airport</h2>
+    <div class="row">
+        <div class="col mb-4">
+            <div class="jumbotron">
+                <form action ="/process_form_update_airport" class ="formClass" method ="put">
+                    <div class="form-outline mb-4">
+                        <lable>Airport Code</lable>
+                        <input type = "text" name ="airportcode" placeholder ="Airport Code eg.LAX" required>
+                    </div>
+               
+                    <div class="form-outline mb-4">
+                        <lable>Airport Name</lable> 
+                        <input type = "text" name ="airportname" placeholder ="Airport Name" required>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <lable>Country</lable>
+                        <input type = "text" name ="country" placeholder ="Country" required>
+                    </div>
+                    <div>
+                        <button type = "submit"> Submit </button>
+                    </div> 
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <h2> Delete an airport</h2>
+    <div class="row">
+        <div class="col mb-4">
+            <div class="jumbotron">
+                <form action ="/process_form_delete_airport" class ="formClass" method ="delete">             
+                    <div class="form-outline mb-4">
+                        <p> Select Airport To Delete</p>
+                        <lable class="form-lable">Airport</lable> 
+                        <select class="select">
+                            <option value="0"></option>
+                            <option value="1">Los Angeles Internation Airport</option>
+                            <option value="2">John F.Kenedy Internation Airport</option>
+                            <option value="3">George Bush Internation Airport</option>
+                            <option value="4">Miami Internation Airport</option>
+                            <option value="5">Chicago Midway Internation Airport</option>
+                            <option value="6">San Francisco Internation Airport</option>
+                            <option value="7">Boston Logan Internation Airport</option>
+                            <option value="8">Denver Internation Airport</option>
+                            <option value="9">Detroil Metropolitan Wayne County Airport</option>
+                            <option value="10">Philadelphia Internation Airport</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type = "submit"> Submit </button>
+                    </div> 
+                </form>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+    <footer>
+        <%- include('../partials/footer'); %>
+    </footer>
+
+</body>
+</html>
