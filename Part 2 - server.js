@@ -54,18 +54,26 @@ app.get('/', function(req, res) {
   //view all current schedule flights in flights page
   app.get('/flights', function(req, res) {
 
-    //local API call to my Python REST API that delivers cars
-    axios.get("http://127.0.0.1:5000/api/flights/all")
-    .then((response)=>{
-        
-    var flights = response.data
-    console.log(flights);
-         // use res.render to load up an ejs view file
+    //local API calls to my Python REST API 
+    axios.all([axios.get('http://127.0.0.1:5000/api/flights/all'),
+    axios.get('http://127.0.0.1:5000/api/planes/all'),
+    axios.get('http://127.0.0.1:5000/api/airports/all')])
+    .then(axios.spread((firstResponse, secondResponse, thirdResponse) => {
+    
+    let flights = firstResponse.data;
+    let planes = secondResponse.data;
+    let airports = thirdResponse.data;
+    
+    // use res.render to load up an ejs view file
     res.render('pages/flights.ejs', {
-            flights: flights
-        });
-    }); 
-  });
+            flights : flights,
+            planes : planes,
+            airports :airports
+        }); 
+  }))
+  .catch(error => console.log(error));
+})
+  
 
   // Add flight form
    
@@ -75,7 +83,13 @@ app.get('/', function(req, res) {
         var airporttoid = req.body.airporttoid
         var date = req.body.date
 
-    res.render ('pages/flight.ejs', {body: req.body})
+    res.render ('pages/flight.ejs', {
+      body: req.body,
+      planeid : planeid,
+      airportfromid : airportfromid,
+      airporttoid : airporttoid,
+      date : date
+    })
   })
 
 
@@ -83,7 +97,10 @@ app.get('/', function(req, res) {
   app.post('/process_form_delete_flight', function(req, res) {
     var id = req.body.id
 
-    res.render ('pages/flights.ejs', {body: req.body})
+    res.render ('pages/flights.ejs', {
+      body: req.body,
+      id : id
+    })
   })
 
 
@@ -96,7 +113,7 @@ app.get('/', function(req, res) {
   //view all planes in planes page
   app.get('/planes', function(req, res) {
 
-    //local API call to my Python REST API that delivers cars
+    //local API call to my Python REST API 
     axios.get("http://127.0.0.1:5000/api/planes/all")
     .then((response)=>{
         
@@ -117,7 +134,13 @@ app.get('/', function(req, res) {
     var capacity = req.body.capacity
     var year = req.body.year
 
-    res.render ('pages/planes.ejs', {body: req.body})
+    res.render ('pages/planes.ejs', {
+      body: req.body,
+      make : make,
+      model : model,
+      capacity : capacity,
+      year : year
+    })
   })
 
   //update plane
@@ -127,14 +150,23 @@ app.get('/', function(req, res) {
     var capacity = req.body.capacity
     var year = req.body.year
 
-    res.render ('pages/planes.ejs', {body: req.body})
+    res.render ('pages/planes.ejs', {
+      body: req.body,
+      make : make,
+      model : model, 
+      capacity : capacity,
+      year : year
+    })
   })
 
   //delete plane
   app.post('/process_form_delete_plane', function(req, res) {
     var id = req.body.id
 
-    res.render ('pages/planes.ejs', {body: req.body})
+    res.render ('pages/planes.ejs', {
+      body: req.body,
+      id : id
+  })
   })
 
   // -------------------END PLANES CRUD SECTION -------------
@@ -167,7 +199,12 @@ app.get('/', function(req, res) {
     var airportname = req.body.airportname
     var country = req.body.country
 
-    res.render ('pages/airports.ejs', {body: req.body})
+    res.render ('pages/airports.ejs', {
+      body: req.body,
+      airportcode : airportcode,
+      airportname : airportname,
+      country : country
+    })
   })
 
   //update plane
@@ -176,14 +213,22 @@ app.get('/', function(req, res) {
     var airportname = req.body.airportname
     var country = req.body.country
 
-    res.render ('pages/airports.ejs', {body: req.body})
+    res.render ('pages/airports.ejs', {
+      body: req.body,
+      airportcode : airportcode,
+      airportname : airportname,
+      country : country
+    })
   })
 
   //delete plane
   app.post('/process_form_delete_airport', function(req, res) {
     var id = req.body.id
 
-    res.render ('pages/airports.ejs', {body: req.body})
+    res.render ('pages/airports.ejs', {
+      body: req.body,
+      id : id
+    })
   })
 
   // ---------------END AIRPORT SECTION ----------
