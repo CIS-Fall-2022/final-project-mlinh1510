@@ -1,5 +1,5 @@
 # final-project-mlinh1510
-final-project-mlinh1510 created by GitHub Classroom
+
 Some parts of this project was referenced from class lecture
 
 In this project, I create an application that utilize Python, HTML, Javascript, Node, MySQL and Flask to display the Puple Winter Airline information.
