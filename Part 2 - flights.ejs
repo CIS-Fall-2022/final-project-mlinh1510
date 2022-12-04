@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+
+</head>
+<body class="container">
+
+    <header>
+        <%- include('../partials/header'); %>
+    </header>
+
+    <main>
+        <br>
+     <% if (locals.auth) { %>
+            Welcome, you have loged in succesfully!
+            <br>
+            Below is the current schedule flights.
+         <% } %>
+
+    <div class="row">
+        <div class="col mb-4">
+            <ul>
+            <% if (locals.flights) { %>
+                <% locals.flights.forEach(function(flight) { %>
+
+                    <li><%= flight.date %> </li>
+
+                    <% }); %> 
+                <% } %> 
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+
+    <h2> Add a flight</h2>
+    <div class="row">
+        <div class="col mb-4">
+            <div class="jumbotron">
+                <form action ="/process_form_add_flight" class ="formClass" method ="post">
+                    <div class="form-outline mb-4">
+                        <div class="form-outline mb-4">
+                            <lable class="form-lable">Plane</lable> 
+                            <select class="select">
+                                <option value="0"></option>
+                                <option value="1">Boeing 787-8, 2008, capacity 248</option>
+                                <option value="2">Airbus A319, 2002, capacity 138</option>
+                                <option value="3">Airbus A321, 2015, capacity 220</option>
+                                <option value="4">Boeing 787-10, 2009, capacity 335</option>
+                                <option value="5">Boeing 757-300, 2007, capacity 267</option>
+                                <option value="6">Boeing 737 NG, 2013, capacity 149</option>
+                                <option value="7">Boeing 777, 2005, capacity 168</option>
+                            </select>
+                        </div>
+                        
+                    </div>
+               
+                    <div class="form-outline mb-4">
+                        <lable class="form-lable">From</lable> 
+                        <select class="select">
+                            <option value="0"></option>
+                            <option value="1">Los Angeles Internation Airport</option>
+                            <option value="2">John F.Kenedy Internation Airport</option>
+                            <option value="3">George Bush Internation Airport</option>
+                            <option value="4">Miami Internation Airport</option>
+                            <option value="5">Chicago Midway Internation Airport</option>
+                            <option value="6">San Francisco Internation Airport</option>
+                            <option value="7">Boston Logan Internation Airport</option>
+                            <option value="8">Denver Internation Airport</option>
+                            <option value="9">Detroil Metropolitan Wayne County Airport</option>
+                            <option value="10">Philadelphia Internation Airport</option>
+                        </select>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <lable class="form-lable">To</lable> 
+                        <select class="select">
+                            <option value="0"></option>
+                            <option value="1">Los Angeles Internation Airport</option>
+                            <option value="2">John F.Kenedy Internation Airport</option>
+                            <option value="3">George Bush Internation Airport</option>
+                            <option value="4">Miami Internation Airport</option>
+                            <option value="5">Chicago Midway Internation Airport</option>
+                            <option value="6">San Francisco Internation Airport</option>
+                            <option value="7">Boston Logan Internation Airport</option>
+                            <option value="8">Denver Internation Airport</option>
+                            <option value="9">Detroil Metropolitan Wayne County Airport</option>
+                            <option value="10">Philadelphia Internation Airport</option>
+                        </select>
+                    </div>
+
+                    <div class="form-outline mb-4">
+                        <lable>Date</lable>
+                        <input type = date name ="date" required>
+                    </div>
+
+                    <div>
+                        <button type = "submit"> Submit </button>
+                    </div> 
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <h2> Delete a flight</h2>
+    <div class="row">
+        <div class="col mb-4">
+            <div class="jumbotron">
+                <form action ="/process_form_delete_flight" class ="formClass" method ="post">             
+                    <div class="form-outline mb-4">
+                        <p>What flight would you like to delete?</p>
+                        <lable>Flight ID </lable> 
+                        <input type = "text" name ="id" placeholder ="Flight id" required>
+                    </div>
+                    <div>
+                        <button type = "submit"> Submit </button>
+                    </div> 
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    </main>
+
+    <footer>
+        <%- include('../partials/footer'); %>
+    </footer>
+
+</body>
+</html>
